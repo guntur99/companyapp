@@ -41,5 +41,4 @@ Route::get('/employees/employee-list', [App\Http\Controllers\EmployeeController:
 Route::get('/employees/employee-list-datatable', [App\Http\Controllers\EmployeeController::class, 'employeeListDatatable'])->name('list.datatable.employee')
     ->middleware(['admin']);
 
-
 require __DIR__.'/auth.php';

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Notifications\NewEmployee;
+use Illuminate\Support\Facades\Notification;
 
 class EmployeeController extends Controller
 {
@@ -35,6 +37,15 @@ class EmployeeController extends Controller
         $employee->phone        = request()->phone;
         $employee->save();
 
+        $employeeData = [
+            'body'          => 'You recieved new notification',
+            'employeeText'  => 'See Detail',
+            'url'           => url('/'),
+            'thanks'        => 'Thank you!!!',
+        ];
+
+        Notification::send($employee, new NewEmployee($employeeData));
+
         return redirect()->route('list.employee');
 
     }
@@ -49,4 +60,5 @@ class EmployeeController extends Controller
         return datatables()->of(Employee::query())->toJson();
 
     }
+
 }
