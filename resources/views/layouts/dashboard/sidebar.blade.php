@@ -42,8 +42,7 @@
                     <ul class="sub-menu">
 
                         <li class="menu-item ">
-                            <a href="#" class=" menu-link">
-                            {{-- <a href="{{ route('kasir') }}" class=" menu-link"> --}}
+                            <a href="{{ route('index.company') }}" class=" menu-link">
                                 <span class="menu-label">
                                     <span class="menu-name">Add New</span>
                                 </span>
@@ -55,7 +54,6 @@
 
                         <li class="menu-item ">
                             <a href="#" class=" menu-link">
-                            {{-- <a href="{{ route('kasir') }}" class=" menu-link"> --}}
                                 <span class="menu-label">
                                     <span class="menu-name">Company List</span>
                                 </span>
