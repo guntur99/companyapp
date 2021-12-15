@@ -35,7 +35,7 @@ class EmployeeController extends Controller
         $employee->phone        = request()->phone;
         $employee->save();
 
-        return back()->with('status', 200);
+        return redirect()->route('list.employee');
 
     }
 

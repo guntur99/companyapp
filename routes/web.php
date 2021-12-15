@@ -23,13 +23,13 @@ Route::get('/dashboard', function () {
 
 // Companies
 Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('index.company')
-    ->middleware(['auth','admin']);
+    ->middleware(['admin']);
 Route::post('/companies/create-new-company', [App\Http\Controllers\CompanyController::class, 'create'])->name('create.company')
-    ->middleware(['auth','admin']);
+    ->middleware(['admin']);
 Route::get('/companies/company-list', [App\Http\Controllers\CompanyController::class, 'list'])->name('list.company')
-    ->middleware(['auth','admin']);
+    ->middleware(['admin']);
 Route::get('/companies/company-list-datatable', [App\Http\Controllers\CompanyController::class, 'companyListDatatable'])->name('list.datatable.company')
-    ->middleware(['auth','admin']);
+    ->middleware(['admin']);
 
 // Employees
 Route::get('/employees', [App\Http\Controllers\EmployeeController::class, 'index'])->name('index.employee')

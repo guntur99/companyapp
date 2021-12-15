@@ -41,7 +41,8 @@ class CompanyController extends Controller
 
         $company->save();
 
-        return back()->with('status', 200);
+        return redirect()->route('list.company');
+
     }
 
     public function list(){
