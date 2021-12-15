@@ -56,8 +56,9 @@ class EmployeeController extends Controller
     }
 
     public function employeeListDatatable(){
+        $employees = Employee::get();
 
-        return datatables()->of(Employee::query())->toJson();
+        return datatables()->of(Employee::all())->toJson();
 
     }
 

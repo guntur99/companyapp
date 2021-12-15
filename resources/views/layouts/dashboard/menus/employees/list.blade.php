@@ -108,13 +108,7 @@
             url: '{{route("list.datatable.employee")}}',
         },
         "columns": [
-            { "name": "first_name", "data":
-                function(data){
-                    var res = data.first_name + ' ' + data.last_name;
-
-                    return res;
-                }
-            },
+            { "name": "full_name", "data": "full_name" },
             { "name": "email", "data": "email" },
             { "name": "phone", "data": "phone" },
             { "name": "company", "data": "company" },
@@ -135,7 +129,7 @@
 
             $('#detail_employee_list').html(`
                 <tr>
-                    <td>`+employee.first_name+ ' ' + employee.last_name+`</td>
+                    <td>`+employee.full_name+`</td>
                     <td>`+employee.email+`</td>
                     <td>`+employee.phone+`</td>
                     <td>`+employee.company+`</td>

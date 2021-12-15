@@ -11,10 +11,15 @@ class Employee extends Model
     use HasFactory, Notifiable;
 
     protected $table = 'employees';
+    protected $appends = ['full_name'];
 
-    public function getFullNameAttribute()
+    // public $sortable = [
+    //     'full_name', 'first_name', 'last_name', 'company', 'email', 'phone', 'created_at'
+    // ];
+
+    public function getFullNameAttribute($value)
     {
-        return $this->first_name . " " . $this->last_name;
+        return "{$this->first_name} {$this->last_name}";
     }
 
 
