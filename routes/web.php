@@ -22,11 +22,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/companies', [App\Http\Controllers\CompanyController::class, 'index'])->name('index.company')
-    ->middleware(['admin']);
+    ->middleware(['auth','admin']);
 Route::post('/companies/create-new-company', [App\Http\Controllers\CompanyController::class, 'create'])->name('create.company')
-    ->middleware(['admin']);
-Route::post('/companies/company-list', [App\Http\Controllers\CompanyController::class, 'list'])->name('list.company')
-    ->middleware(['admin']);
+    ->middleware(['auth','admin']);
+Route::get('/companies/company-list', [App\Http\Controllers\CompanyController::class, 'list'])->name('list.company')
+    ->middleware(['auth','admin']);
+Route::get('/companies/company-list-datatable', [App\Http\Controllers\CompanyController::class, 'companyListDatatable'])->name('list.datatable.company')
+    ->middleware(['auth','admin']);
 
 
 require __DIR__.'/auth.php';

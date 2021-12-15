@@ -17,8 +17,7 @@ class CompanyController extends Controller
 
     public function index(){
 
-        return view('layouts.dashboard.menus.companies.create', [
-        ]);
+        return view('layouts.dashboard.menus.companies.create');
     }
 
     public function create(){
@@ -43,5 +42,16 @@ class CompanyController extends Controller
         $company->save();
 
         return back()->with('status', 200);
+    }
+
+    public function list(){
+
+        return view('layouts.dashboard.menus.companies.list');
+    }
+
+    public function companyListDatatable(){
+
+        return datatables()->of(Company::query())->toJson();
+
     }
 }
