@@ -79,7 +79,7 @@
                     <ul class="sub-menu">
 
                         <li class="menu-item ">
-                            <a href="#" class=" menu-link">
+                            <a href="{{ route('index.employee') }}" class=" menu-link">
                                 <span class="menu-label">
                                     <span class="menu-name">Add New</span>
                                 </span>
@@ -90,7 +90,7 @@
                         </li>
 
                         <li class="menu-item ">
-                            <a href="#" class=" menu-link">
+                            <a href="{{ route('list.employee') }}" class=" menu-link">
                                 <span class="menu-label">
                                     <span class="menu-name">Employee List</span>
                                 </span>

@@ -30,13 +30,13 @@
 
                         <div class="card-body">
                             <div class="table-responsive p-t-10">
-                                <table id="companies-table" class="table" style="width:100%; cursor:pointer;">
+                                <table id="employees-table" class="table" style="width:100%; cursor:pointer;">
                                     <thead>
                                     <tr>
-                                        <th>Logo</th>
-                                        <th>Name</th>
+                                        <th>Full Name</th>
                                         <th>Email</th>
-                                        <th>Website</th>
+                                        <th>Phone</th>
+                                        <th>Company</th>
                                         <th>Created At</th>
                                     </tr>
                                     </thead>
@@ -53,12 +53,12 @@
 
 
     <!---Modal-->
-    <div class="modal fade bd-example-modal-lg" id="detailCompanyList" data-keyboard="false" tabindex="-1" role="dialog">
+    <div class="modal fade bd-example-modal-lg" id="detailEmployeeList" data-keyboard="false" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <form id="clientInvoice" class="w-100">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Company Detail</h5>
+                        <h5 class="modal-title">Employee Detail</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -72,14 +72,14 @@
                                         <table class="table table-hover w-100" id="company-detail-table" style="width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <th>Name</th>
+                                                    <th>Full Name</th>
                                                     <th>Email</th>
-                                                    <th>Website</th>
-                                                    <th>Logo</th>
-                                                    <th>Dibuat Tanggal</th>
+                                                    <th>Phone</th>
+                                                    <th>Company</th>
+                                                    <th>Created At</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="detail_list"></tbody>
+                                            <tbody id="detail_employee_list"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
 <script src="{{ asset('atmos/light/assets/vendor/DataTables/datatables.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script>
-    var dataTable = $('#companies-table').DataTable({
+    var dataTable = $('#employees-table').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
         "searchDelay": 350,
@@ -105,23 +105,19 @@
         "processing": true,
         "serverSide": true,
         "ajax": {
-            url: '{{route("list.datatable.company")}}',
+            url: '{{route("list.datatable.employee")}}',
         },
         "columns": [
-            { "name": "logo", "data":
+            { "name": "first_name", "data":
                 function(data){
-                    var res = `
-                        <div class="card-media">
-                            <img class="card-img-top" src="{{ asset('storage/logos') }}/`+data.logo+`" style="width: 150px;">
-                        </div>
-                    `;
+                    var res = data.first_name + ' ' + data.last_name;
 
                     return res;
                 }
             },
-            { "name": "name", "data": "name" },
             { "name": "email", "data": "email" },
-            { "name": "website", "data": "website" },
+            { "name": "phone", "data": "phone" },
+            { "name": "company", "data": "company" },
             { "name": "created_at", "data":
                 function(data){
                     var res = moment(data.created_at).format('LL');
@@ -134,20 +130,16 @@
     });
 
     $('.dataTable').on('click', 'tbody tr', function() {
-        var el      = $('#detailCompanyList'),
-            company = dataTable.row(this).data();
+        var el       = $('#detailEmployeeList'),
+            employee = dataTable.row(this).data();
 
-            $('#detail_list').html(`
+            $('#detail_employee_list').html(`
                 <tr>
-                    <td>
-                        <div class="card-media">
-                            <img class="card-img-top" src="{{ asset('storage/logos') }}/`+company.logo+`" style="width: 150px;">
-                        </div>
-                    </td>
-                    <td>`+company.name+`</td>
-                    <td>`+company.email+`</td>
-                    <td>`+company.website+`</td>
-                    <td>`+moment(company.created_at).format('LL')+`</td>
+                    <td>`+employee.first_name+ ' ' + employee.last_name+`</td>
+                    <td>`+employee.email+`</td>
+                    <td>`+employee.phone+`</td>
+                    <td>`+employee.company+`</td>
+                    <td>`+moment(employee.created_at).format('LL')+`</td>
                 </tr>`
             );
 
