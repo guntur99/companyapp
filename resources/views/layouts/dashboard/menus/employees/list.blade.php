@@ -3,9 +3,6 @@
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('atmos/light/assets/vendor/DataTables/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('atmos/light/assets/vendor/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css') }}">
-    <style>
-        .pointer {cursor: pointer;}
-    </style>
 @endsection
 
 @section('content')
@@ -30,14 +27,16 @@
 
                         <div class="card-body">
                             <div class="table-responsive p-t-10">
-                                <table id="employees-table" class="table" style="width:100%; cursor:pointer;">
+                                <table id="employees-table" class="table" style="width:100%;">
                                     <thead>
                                     <tr>
+                                        <th>Index</th>
                                         <th>Full Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Company</th>
                                         <th>Created At</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -58,31 +57,38 @@
             <form id="clientInvoice" class="w-100">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Employee Detail</h5>
+                        <input id="employee_id" hidden>
+                        <h5 id="full_name" class="modal-title"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body ">
                         <div class=" w-100 p-3">
-                            <div class="col-md-12 mb-10" id="">
-                                <div class="row w-100 pt-3">
-                                    <p id="order_id" hidden></p>
-                                    <div class="col-md-12 col-sm-12 px-0 table-responsive">
-                                        <table class="table table-hover w-100" id="company-detail-table" style="width: 100%;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Full Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
-                                                    <th>Company</th>
-                                                    <th>Created At</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="detail_employee_list"></tbody>
-                                        </table>
+                            <div class="card-body">
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
                                     </div>
                                 </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="phone">Phone</label>
+                                        <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone">
+                                    </div>
+                                </div>
+                                <div id="update-employee-data"></div>
                             </div>
                         </div>
                     </div>
@@ -108,10 +114,18 @@
             url: '{{route("list.datatable.employee")}}',
         },
         "columns": [
+            { "name": "id", "data": "id" },
             { "name": "full_name", "data": "full_name" },
             { "name": "email", "data": "email" },
             { "name": "phone", "data": "phone" },
-            { "name": "company", "data": "company" },
+            { "name": "company_name", "data": "company_name" },
+            { "name": "created_at", "data":
+                function(data){
+                    var res = moment(data.created_at).format('LL');
+
+                    return res;
+                }
+            },
             { "name": "created_at", "data":
                 function(data){
                     var res = moment(data.created_at).format('LL');
@@ -120,24 +134,68 @@
                 }
             },
         ],
-        "order" :[[ 0, 'desc' ]]
+        "order" :[[ 0, 'asc' ]],
+        "columnDefs": [
+                {
+                    "targets": -1,
+                    "data": "action",
+                    "render": function (date, type, data) {
+                        var res =
+                        `
+                            <a class='btn btn-warning text-white mx-1' onclick=\'editEmployee(`+JSON.stringify(data)+`)\'> Edit</a>
+                            <a class='btn btn-danger text-white mx-1' onclick=\'deleteEmployee(`+JSON.stringify(data)+`)\'> Delete</a>
+                        `;
+                        return res;
+                    }
+                }
+            ],
     });
 
-    $('.dataTable').on('click', 'tbody tr', function() {
-        var el       = $('#detailEmployeeList'),
-            employee = dataTable.row(this).data();
+    function editEmployee(data){
 
-            $('#detail_employee_list').html(`
-                <tr>
-                    <td>`+employee.full_name+`</td>
-                    <td>`+employee.email+`</td>
-                    <td>`+employee.phone+`</td>
-                    <td>`+employee.company+`</td>
-                    <td>`+moment(employee.created_at).format('LL')+`</td>
-                </tr>`
-            );
+        var el = $('#detailEmployeeList');
+
+        $('#full_name').html(data.full_name + " | " + data.company_name);
+        $('#first_name').val(data.first_name);
+        $('#last_name').val(data.last_name);
+        $('#email').val(data.email);
+        $('#phone').val(data.phone);
+        $('#update-employee-data').html(`
+            <button type="button" id="update-employee-data" onclick="updateEmployee(`+data.id+`)" class="w-100 btn btn-dark mt-3">Update Employee Data</button>
+        `);
 
         el.modal('show');
-    });
+    };
+
+    function updateEmployee(id){
+
+        var formData = new FormData();
+        formData.append('employee_id', id);
+        formData.append('first_name', $('#first_name').val());
+        formData.append('last_name', $('#last_name').val());
+        formData.append('email', $('#email').val());
+        formData.append('phone', $('#phone').val());
+
+        axios.post('{{route("update.employee")}}', formData).then((res) => {
+            alert('Update Success!');
+            location.reload();
+        }).catch((err) => {
+            return 'error';
+        });
+    }
+
+    function deleteEmployee(data){
+
+        var formData = new FormData();
+        formData.append('employee_id', data.id);
+
+        axios.post('{{route("delete.employee")}}', formData).then((res) => {
+            alert('Delete Success!');
+            location.reload();
+        }).catch((err) => {
+            return 'error';
+        });
+    }
+
 </script>
 @endsection

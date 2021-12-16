@@ -33,6 +33,7 @@
                                 <table id="companies-table" class="table" style="width:100%; cursor:pointer;">
                                     <thead>
                                     <tr>
+                                        <th>Index</th>
                                         <th>Logo</th>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -108,6 +109,7 @@
             url: '{{route("list.datatable.company")}}',
         },
         "columns": [
+            { "name": "id", "data": "id" },
             { "name": "logo", "data":
                 function(data){
                     var res = `
@@ -130,7 +132,7 @@
                 }
             },
         ],
-        "order" :[[ 0, 'desc' ]]
+        "order" :[[ 0, 'asc' ]]
     });
 
     $('.dataTable').on('click', 'tbody tr', function() {

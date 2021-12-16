@@ -40,5 +40,9 @@ Route::get('/employees/employee-list', [App\Http\Controllers\EmployeeController:
     ->middleware(['admin']);
 Route::get('/employees/employee-list-datatable', [App\Http\Controllers\EmployeeController::class, 'employeeListDatatable'])->name('list.datatable.employee')
     ->middleware(['admin']);
+Route::post('/employees/update-employee', [App\Http\Controllers\EmployeeController::class, 'update'])->name('update.employee')
+    ->middleware(['admin']);
+Route::post('/employees/delete-employee', [App\Http\Controllers\EmployeeController::class, 'delete'])->name('delete.employee')
+    ->middleware(['admin']);
 
 require __DIR__.'/auth.php';

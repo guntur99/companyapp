@@ -53,13 +53,34 @@ class EmployeeController extends Controller
     public function list(){
 
         return view('layouts.dashboard.menus.employees.list');
+
     }
 
     public function employeeListDatatable(){
-        $employees = Employee::get();
 
-        return datatables()->of(Employee::all())->toJson();
+        $employees = Employee::join('companies', 'employees.company', '=', 'companies.id')
+                        ->select(array('employees.*', 'companies.name as company_name'))->get();
 
+        return datatables()->of($employees)->toJson();
+
+    }
+
+    public function update(){
+        $employee               = Employee::find((int)request()->employee_id);
+        $employee->first_name   = request()->first_name;
+        $employee->last_name    = request()->last_name;
+        $employee->email        = request()->email;
+        $employee->phone        = request()->phone;
+        $employee->save();
+
+        return response('Update Success', 200);
+    }
+
+    public function delete(Request $req){
+
+        Employee::find($req->employee_id)->delete();
+
+        return response('Delete Success', 200);
     }
 
 }
