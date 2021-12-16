@@ -55,4 +55,22 @@ class CompanyController extends Controller
         return datatables()->of(Company::query())->toJson();
 
     }
+
+    public function update(){
+
+        $employee           = Company::find((int)request()->company_id);
+        $employee->name     = request()->name;
+        $employee->email    = request()->email;
+        $employee->website  = request()->website;
+        $employee->save();
+
+        return response('Update Success', 200);
+    }
+
+    public function delete(){
+
+        Company::find(request()->company_id)->delete();
+
+        return response('Delete Success', 200);
+    }
 }

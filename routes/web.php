@@ -30,6 +30,10 @@ Route::get('/companies/company-list', [App\Http\Controllers\CompanyController::c
     ->middleware(['admin']);
 Route::get('/companies/company-list-datatable', [App\Http\Controllers\CompanyController::class, 'companyListDatatable'])->name('list.datatable.company')
     ->middleware(['admin']);
+Route::post('/companies/update-company', [App\Http\Controllers\CompanyController::class, 'update'])->name('update.company')
+    ->middleware(['admin']);
+Route::post('/companies/delete-company', [App\Http\Controllers\CompanyController::class, 'delete'])->name('delete.company')
+    ->middleware(['admin']);
 
 // Employees
 Route::get('/employees', [App\Http\Controllers\EmployeeController::class, 'index'])->name('index.employee')

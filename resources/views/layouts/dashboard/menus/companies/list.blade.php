@@ -30,7 +30,7 @@
 
                         <div class="card-body">
                             <div class="table-responsive p-t-10">
-                                <table id="companies-table" class="table" style="width:100%; cursor:pointer;">
+                                <table id="companies-table" class="table" style="width:100%;">
                                     <thead>
                                     <tr>
                                         <th>Index</th>
@@ -38,7 +38,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Website</th>
-                                        <th>Created At</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -59,6 +59,7 @@
             <form id="clientInvoice" class="w-100">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <input id="company_id" hidden>
                         <h5 class="modal-title">Company Detail</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
@@ -66,24 +67,29 @@
                     </div>
                     <div class="modal-body ">
                         <div class=" w-100 p-3">
-                            <div class="col-md-12 mb-10" id="">
-                                <div class="row w-100 pt-3">
-                                    <p id="order_id" hidden></p>
-                                    <div class="col-md-12 col-sm-12 px-0 table-responsive">
-                                        <table class="table table-hover w-100" id="company-detail-table" style="width: 100%;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Website</th>
-                                                    <th>Logo</th>
-                                                    <th>Dibuat Tanggal</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="detail_list"></tbody>
-                                        </table>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                                     </div>
                                 </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="website">Website</label>
+                                        <input type="text" class="form-control" id="website" name="website" placeholder="Website">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="website">Logo</label>
+                                        <div id="logo"></div>
+                                    </div>
+                                </div>
+                                <div id="update-button"></div>
                             </div>
                         </div>
                     </div>
@@ -123,7 +129,15 @@
             },
             { "name": "name", "data": "name" },
             { "name": "email", "data": "email" },
-            { "name": "website", "data": "website" },
+            { "name": "website", "data":
+                function(data){
+                    var res = `
+                        <a href="https://`+data.website+`" target="__blank">`+data.website+`</a>
+                    `;
+
+                    return res;
+                }
+            },
             { "name": "created_at", "data":
                 function(data){
                     var res = moment(data.created_at).format('LL');
@@ -132,28 +146,69 @@
                 }
             },
         ],
-        "order" :[[ 0, 'asc' ]]
+        "order" :[[ 0, 'asc' ]],
+        "columnDefs": [
+                {
+                    "targets": -1,
+                    "data": "action",
+                    "render": function (date, type, data) {
+                        var res =
+                        `
+                            <a class='btn btn-warning text-white mx-1' onclick=\'editCompany(`+JSON.stringify(data)+`)\'> Edit</a>
+                            <a class='btn btn-danger text-white mx-1' onclick=\'deleteCompany(`+JSON.stringify(data)+`)\'> Delete</a>
+                        `;
+                        return res;
+                    }
+                }
+            ],
     });
 
-    $('.dataTable').on('click', 'tbody tr', function() {
-        var el      = $('#detailCompanyList'),
-            company = dataTable.row(this).data();
+    function editCompany(data){
+        console.log(data);
+        var el = $('#detailCompanyList');
 
-            $('#detail_list').html(`
-                <tr>
-                    <td>
-                        <div class="card-media">
-                            <img class="card-img-top" src="{{ asset('storage/logos') }}/`+company.logo+`" style="width: 150px;">
+        $('#name').val(data.name);
+        $('#email').val(data.email);
+        $('#website').val(data.website);
+        $('#logo').html(`
+            <div class="card-media">
+                            <img class="card-img-top" src="{{ asset('storage/logos') }}/`+data.logo+`" style="width: 250px;">
                         </div>
-                    </td>
-                    <td>`+company.name+`</td>
-                    <td>`+company.email+`</td>
-                    <td>`+company.website+`</td>
-                    <td>`+moment(company.created_at).format('LL')+`</td>
-                </tr>`
-            );
+        `);
+        $('#update-button').html(`
+            <button type="button" id="update-company-data" onclick="updateCompany(`+data.id+`)" class="w-100 btn btn-dark mt-3">Update Company Data</button>
+        `);
 
         el.modal('show');
-    });
+    };
+
+    function updateCompany(id){
+
+        var formData = new FormData();
+        formData.append('company_id', id);
+        formData.append('name', $('#name').val());
+        formData.append('email', $('#email').val());
+        formData.append('website', $('#website').val());
+
+        axios.post('{{route("update.company")}}', formData).then((res) => {
+            alert('Update Success!');
+            location.reload();
+        }).catch((err) => {
+            return 'error';
+        });
+    }
+
+    function deleteCompany(data){
+
+        var formData = new FormData();
+        formData.append('company_id', data.id);
+
+        axios.post('{{route("delete.company")}}', formData).then((res) => {
+            alert('Delete Success!');
+            location.reload();
+        }).catch((err) => {
+            return 'error';
+        });
+    }
 </script>
 @endsection

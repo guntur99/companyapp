@@ -76,9 +76,9 @@ class EmployeeController extends Controller
         return response('Update Success', 200);
     }
 
-    public function delete(Request $req){
+    public function delete(){
 
-        Employee::find($req->employee_id)->delete();
+        Employee::find(request()->employee_id)->delete();
 
         return response('Delete Success', 200);
     }
