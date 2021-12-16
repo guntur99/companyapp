@@ -24,7 +24,7 @@ class CompanyController extends Controller
 
         // $validate = request()->validate([
         //     'name' => 'required',
-        //     'email' => 'unique:companies|max:255',
+        //     'email' => 'unique:companies',
         // ]);
 
         $company            = new Company;

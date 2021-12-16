@@ -98,6 +98,32 @@
         </div>
     </div>
 
+    <div class="modal fade "   id="modalConfirmation" data-backdrop="static"  tabindex="-1" role="dialog"
+            aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-body">
+                    <div class="px-3 pt-3 text-center">
+                        <div class="event-type warning">
+                            <div class="event-indicator ">
+                                <i class="mdi mdi-exclamation text-white" style="font-size: 60px"></i>
+                            </div>
+                        </div>
+                        <h3 class="pt-3">Are you sure?</h3>
+
+                    </div>
+                </div>
+                <div class="modal-footer ">
+                    <a href="#" class="btn btn-secondary" data-dismiss="modal" aria-label="Close" >cancel</a>
+                    <div id="delete-button"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('custom_script')
@@ -155,7 +181,7 @@
                         var res =
                         `
                             <a class='btn btn-warning text-white mx-1' onclick=\'editCompany(`+JSON.stringify(data)+`)\'> Edit</a>
-                            <a class='btn btn-danger text-white mx-1' onclick=\'deleteCompany(`+JSON.stringify(data)+`)\'> Delete</a>
+                            <a class='btn btn-danger text-white mx-1' onclick=\'deleteComfirmation(`+data.id+`)\'> Delete</a>
                         `;
                         return res;
                     }
@@ -164,7 +190,7 @@
     });
 
     function editCompany(data){
-        console.log(data);
+
         var el = $('#detailCompanyList');
 
         $('#name').val(data.name);
@@ -198,10 +224,14 @@
         });
     }
 
-    function deleteCompany(data){
+    function deleteComfirmation(id){
+        $('#delete-button').html(`<a href="#" class="btn btn-danger" data-dismiss="modal" onclick=\'deleteCompany(`+id+`)\'>Okay</a>`);
+        $('#modalConfirmation').modal('show');
+    }
 
+    function deleteCompany(id){
         var formData = new FormData();
-        formData.append('company_id', data.id);
+        formData.append('company_id', id);
 
         axios.post('{{route("delete.company")}}', formData).then((res) => {
             alert('Delete Success!');
