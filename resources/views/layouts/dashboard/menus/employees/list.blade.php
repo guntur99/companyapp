@@ -200,18 +200,12 @@
             { "name": "company_name", "data": "company_name" },
             { "name": "created_at", "data":
                 function(data){
-                    var res = moment(data.created_at).format('LL');
+                    var res = moment(data.created_at).format('LLL');
 
                     return res;
                 }
             },
-            { "name": "created_at", "data":
-                function(data){
-                    var res = moment(data.created_at).format('LL');
-
-                    return res;
-                }
-            },
+            { "name": null, "data": null },
         ],
         "order" :[[ 0, 'asc' ]],
         "columnDefs": [
@@ -221,8 +215,8 @@
                     "render": function (date, type, data) {
                         var res =
                         `
-                            <a class='btn btn-warning text-white mx-1' onclick=\'editEmployee(`+JSON.stringify(data)+`)\'> Edit</a>
-                            <a class='btn btn-danger text-white mx-1' onclick=\'deleteComfirmation(`+data.id+`)\'> Delete</a>
+                            <a class='btn btn-warning text-white m-1' onclick=\'editEmployee(`+JSON.stringify(data)+`)\'> Edit</a>
+                            <a class='btn btn-danger text-white m-1' onclick=\'deleteComfirmation(`+data.id+`)\'> Delete</a>
                         `;
                         return res;
                     }
