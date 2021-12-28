@@ -31,7 +31,7 @@
 
                                     <div class="col-md-3 form-group">
                                         <label><strong>Email :</strong></label>
-                                        <select id='email' class="form-control" style="width: 200px">
+                                        <select id='email' class="form-control js-select2" style="width: 200px">
                                             <option value="" selected>All</option>
                                             @foreach ($employees as $employee)
                                                 <option value="{{ $employee->email }}">{{ $employee->email }}</option>
@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label><strong>Company :</strong></label>
-                                        <select id='company' class="form-control" style="width: 200px">
+                                        <select id='company' class="form-control js-select2" style="width: 200px">
                                             <option value="" selected>All</option>
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}">{{ $company->name }}</option>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label><strong>First Name :</strong></label>
-                                        <select id='first_name' class="form-control" style="width: 200px">
+                                        <select id='first_name' class="form-control js-select2" style="width: 200px">
                                             <option value="" selected>All</option>
                                             @foreach ($employees as $employee)
                                                 <option value="{{ $employee->first_name }}">{{ $employee->first_name }}</option>
@@ -58,12 +58,18 @@
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label><strong>Last Name :</strong></label>
-                                        <select id='last_name' class="form-control" style="width: 200px">
+                                        <select id='last_name' class="form-control js-select2" style="width: 200px">
                                             <option value="" selected>All</option>
                                             @foreach ($employees as $employee)
                                                 <option value="{{ $employee->last_name }}">{{ $employee->last_name }}</option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label><strong>Date : (one month default)</strong></label>
+                                    <div class="m-b-10">
+                                        <input type="text" name="date_range" id="date_range" value="12/01/2021 - 12/31/2021" class="input-daterange form-control">
                                     </div>
                                 </div>
                                 <table id="employees-table" class="table" style="width:100%;">
@@ -182,6 +188,7 @@
                 d.company       = $('#company').val(),
                 d.first_name    = $('#first_name').val(),
                 d.last_name     = $('#last_name').val(),
+                d.date_range    = $('#date_range').val(),
                 d.search        = $('input[type="search"]').val()
             }
         },
@@ -287,6 +294,10 @@
     });
 
     $('#last_name').change(function(){
+        dataTable.draw();
+    });
+
+    $('#date_range').change(function(){
         dataTable.draw();
     });
 

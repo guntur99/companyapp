@@ -66,10 +66,11 @@ class EmployeeController extends Controller
         $company    = request()->company;
         $first_name = request()->first_name;
         $last_name  = request()->last_name;
+        $date_range = request()->date_range;
 
         $employees = Employee::join('companies', 'employees.company', '=', 'companies.id')
                         ->select(array('employees.*', 'companies.name as company_name'))
-                        ->orWhere(function($query) use($email, $company, $first_name, $last_name) {
+                        ->orWhere(function($query) use($email, $company, $first_name, $last_name, $date_range) {
                             if($email != null){
                                 $query->where('employees.email', $email);
                             }
@@ -81,6 +82,12 @@ class EmployeeController extends Controller
                             }
                             if($last_name != null){
                                 $query->where('employees.last_name', $last_name);
+                            }
+                            if($date_range != null){
+                                $date   = explode(' - ', $date_range);
+                                $from   = date('Y-m-d', strtotime($date[0]));
+                                $to     = date('Y-m-d', strtotime($date[1]));
+                                $query->whereBetween('employees.created_at', [$from, $to]);
                             }
                         })
                         ->get();
