@@ -51,15 +51,39 @@ class EmployeeController extends Controller
     }
 
     public function list(){
+        $employees  = Employee::select('first_name', 'last_name', 'email', 'created_at')->get();
+        $companies  = Company::select('id', 'name')->get();
 
-        return view('layouts.dashboard.menus.employees.list');
+        return view('layouts.dashboard.menus.employees.list', [
+            'employees' => $employees,
+            'companies' => $companies,
+        ]);
 
     }
 
     public function employeeListDatatable(){
+        $email      = request()->email;
+        $company    = request()->company;
+        $first_name = request()->first_name;
+        $last_name  = request()->last_name;
 
         $employees = Employee::join('companies', 'employees.company', '=', 'companies.id')
-                        ->select(array('employees.*', 'companies.name as company_name'))->get();
+                        ->select(array('employees.*', 'companies.name as company_name'))
+                        ->orWhere(function($query) use($email, $company, $first_name, $last_name) {
+                            if($email != null){
+                                $query->where('employees.email', $email);
+                            }
+                            if($company != null){
+                                $query->where('employees.company', $company);
+                            }
+                            if ($first_name != null){
+                                $query->where('employees.first_name', $first_name);
+                            }
+                            if($last_name != null){
+                                $query->where('employees.last_name', $last_name);
+                            }
+                        })
+                        ->get();
 
         return datatables()->of($employees)->toJson();
 

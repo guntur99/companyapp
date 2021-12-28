@@ -27,6 +27,45 @@
 
                         <div class="card-body">
                             <div class="table-responsive p-t-10">
+                                <div class="row col-md-12">
+
+                                    <div class="col-md-3 form-group">
+                                        <label><strong>Email :</strong></label>
+                                        <select id='email' class="form-control" style="width: 200px">
+                                            <option value="" selected>All</option>
+                                            @foreach ($employees as $employee)
+                                                <option value="{{ $employee->email }}">{{ $employee->email }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label><strong>Company :</strong></label>
+                                        <select id='company' class="form-control" style="width: 200px">
+                                            <option value="" selected>All</option>
+                                            @foreach ($companies as $company)
+                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label><strong>First Name :</strong></label>
+                                        <select id='first_name' class="form-control" style="width: 200px">
+                                            <option value="" selected>All</option>
+                                            @foreach ($employees as $employee)
+                                                <option value="{{ $employee->first_name }}">{{ $employee->first_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label><strong>Last Name :</strong></label>
+                                        <select id='last_name' class="form-control" style="width: 200px">
+                                            <option value="" selected>All</option>
+                                            @foreach ($employees as $employee)
+                                                <option value="{{ $employee->last_name }}">{{ $employee->last_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <table id="employees-table" class="table" style="width:100%;">
                                     <thead>
                                     <tr>
@@ -138,6 +177,13 @@
         "serverSide": true,
         "ajax": {
             url: '{{route("list.datatable.employee")}}',
+            data: function (d) {
+                d.email         = $('#email').val(),
+                d.company       = $('#company').val(),
+                d.first_name    = $('#first_name').val(),
+                d.last_name     = $('#last_name').val(),
+                d.search        = $('input[type="search"]').val()
+            }
         },
         "columns": [
             { "name": "id", "data": "id" },
@@ -227,6 +273,22 @@
             return 'error';
         });
     }
+
+    $('#email').change(function(){
+        dataTable.draw();
+    });
+
+    $('#company').change(function(){
+        dataTable.draw();
+    });
+
+    $('#first_name').change(function(){
+        dataTable.draw();
+    });
+
+    $('#last_name').change(function(){
+        dataTable.draw();
+    });
 
 </script>
 @endsection
