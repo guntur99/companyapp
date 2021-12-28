@@ -30,6 +30,8 @@
 
                         <div class="card-body">
                             <div class="table-responsive p-t-10">
+
+                                <button type="button" onclick="refreshButton()" class="btn m-b-15 ml-2 mr-2 btn-primary">Refresh</button>
                                 <table id="quotes-table" class="table" style="width:100%;">
                                     <thead>
                                     <tr>
@@ -74,5 +76,9 @@
         ],
         "order" :[[ 0, 'asc' ]],
     });
+
+    function refreshButton(){
+        dataTable.draw();
+    }
 </script>
 @endsection
