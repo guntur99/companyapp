@@ -102,6 +102,17 @@
                     </ul>
                 </li>
             @endif
+
+            <li class="menu-item ">
+                <a href="{{ route('daily.quotes') }}" class="menu-link">
+                    <span class="menu-label">
+                        <span class="menu-name">Daily Quotes</span>
+                    </span>
+                    <span class="menu-icon">
+                        <i class="icon-placeholder mdi mdi-format-quote-close "></i>
+                    </span>
+                </a>
+            </li>
         </ul>
 
     </div>

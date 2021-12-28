@@ -49,4 +49,11 @@ Route::post('/employees/update-employee', [App\Http\Controllers\EmployeeControll
 Route::post('/employees/delete-employee', [App\Http\Controllers\EmployeeController::class, 'delete'])->name('delete.employee')
     ->middleware(['admin']);
 
+
+Route::get('/daily-quotes', [App\Http\Controllers\CompanyController::class, 'dailyQuotes'])->name('daily.quotes')
+    ->middleware(['auth']);
+Route::get('/daily-quotes/quotes-list-datatable', [App\Http\Controllers\CompanyController::class, 'fetchQuotes'])->name('fetch.quotes')
+    ->middleware(['auth']);
+
+
 require __DIR__.'/auth.php';

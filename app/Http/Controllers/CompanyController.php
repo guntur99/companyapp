@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Company;
+use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
 {
@@ -72,5 +73,23 @@ class CompanyController extends Controller
         Company::find(request()->company_id)->delete();
 
         return response('Delete Success', 200);
+    }
+
+    public function dailyQuotes(){
+
+        // dd($quotes);
+        return view('layouts.dashboard.menus.companies.quotes');
+    }
+
+    public function fetchQuotes(){
+
+        $response = Http::get('https://zenquotes.io/api/quotes', [
+            'limit' => 50,
+        ]);
+
+        $quotes = json_decode($response->body());
+
+        return datatables()->of($quotes)->toJson();
+
     }
 }
